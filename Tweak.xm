@@ -5,6 +5,8 @@
 
 + (id)sharedInstance;
 
+- (NSArray *)allNotifications;
+
 - (void)setAssociation:(id)key withObject:(id)object;
 - (id)getAssociation:(id)key;
 
@@ -21,6 +23,10 @@
 		shared.associations = [[NSMutableDictionary alloc] init];
 	}
 	return shared;
+}
+
+- (NSArray *)allNotifications {
+	return [[[self associations] allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
 - (void)setAssociation:(id)key withObject:(id)object {
