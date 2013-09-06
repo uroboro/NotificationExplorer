@@ -121,22 +121,22 @@ b = [[UFSAssociation sharedInstance] getAssociation:a];
 
 - (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)notificationName object:(id)anObject {
 	%orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:NSStringFromClass([self class])];
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:@"NSNotificationCenter"];
 }
 
 - (void)postNotification:(NSNotification *)notification {
 	%orig;
 //NSLog(@"offending instance (%p) of class %@ in %@", notification, NSStringFromClass([notification class]), NSStringFromClass([self class]));
 														//([notification respondsToSelector:@selector(name)])? [notification name]:@"notif"
-	[[UFSAssociationTable sharedInstance] setAssociation:[notification name] withObject:@"notification" forClass:NSStringFromClass([self class])];
+	[[UFSAssociationTable sharedInstance] setAssociation:[notification name] withObject:@"notification" forClass:@"NSNotificationCenter"];
 }
 - (void)postNotificationName:(NSString *)notificationName object:(id)anObject {
 	%orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:NSStringFromClass([self class])];
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:@"NSNotificationCenter"];
 }
 - (void)postNotificationName:(NSString *)notificationName object:(id)anObject userInfo:(NSDictionary *)userInfo {
 	%orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:NSStringFromClass([self class])];
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:@"NSNotificationCenter"];
 }
 %end
 
@@ -152,26 +152,26 @@ b = [[UFSAssociation sharedInstance] getAssociation:a];
 
 - (id)_initWithServerName:(NSString *)serverName {
 	id r = %orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:serverName withObject:@"serverName" forClass:NSStringFromClass([self class])];
+	[[UFSAssociationTable sharedInstance] setAssociation:serverName withObject:@"serverName" forClass:@"CPDistributedNotificationCenter"];
 	return r;
 }
 - (void)deliverNotification:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
 //NSLog(@"uroboro %s", __PRETTY_FUNCTION__);
 	%orig;
 //NSLog(@"offending instance (%p) of class %@ in %@", notification, NSStringFromClass([notification class]), NSStringFromClass([self class]));
-	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:NSStringFromClass([self class])];
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:@"CPDistributedNotificationCenter"];
 }
 - (void)postNotificationName:(NSString *)notificationName {
 	%orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:NSStringFromClass([self class])];
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:@"CPDistributedNotificationCenter"];
 }
 - (void)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
 	%orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:NSStringFromClass([self class])];
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:@"CPDistributedNotificationCenter"];
 }
 - (BOOL)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo toBundleIdentifier:(NSString *)bundleIdentifier {
 	BOOL r = %orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:NSStringFromClass([self class])];
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:@"CPDistributedNotificationCenter"];
 	return r;
 }
 
