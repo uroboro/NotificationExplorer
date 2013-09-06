@@ -132,6 +132,8 @@ b = [[UFSAssociation sharedInstance] getAssociation:a];
 
 - (void)postNotification:(NSNotification *)notification {
 	%orig;
+//NSLog(@"offending instance (%p) of class %@ in %@", notification, NSStringFromClass([notification class]), NSStringFromClass([self class]));
+
 	[[UFSAssociationTable sharedInstance] setAssociation:[notification name] withObject:@"notification" forClass:[self class]];
 }
 - (void)postNotificationName:(NSString *)notificationName object:(id)anObject {
@@ -160,7 +162,9 @@ b = [[UFSAssociation sharedInstance] getAssociation:a];
 	return r;
 }
 - (void)deliverNotification:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
+//NSLog(@"uroboro %s", __PRETTY_FUNCTION__);
 	%orig;
+//NSLog(@"offending instance (%p) of class %@ in %@", notification, NSStringFromClass([notification class]), NSStringFromClass([self class]));
 	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 }
 - (void)postNotificationName:(NSString *)notificationName {
@@ -174,72 +178,6 @@ b = [[UFSAssociation sharedInstance] getAssociation:a];
 - (BOOL)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo toBundleIdentifier:(NSString *)bundleIdentifier {
 	BOOL r = %orig;
 	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
-	return r;
-}
-
-%end
-
-typedef struct XXStruct_kUSYWB {
-	unsigned _field1[8];
-} XXStruct_kUSYWB;
-
-@interface CPDistributedMessagingCenter : NSObject {
-}
-- (void)_dispatchMessageNamed:(id)named userInfo:(id)info reply:(id *)reply auditToken:(XXStruct_kUSYWB *)token;
-- (id)_initWithServerName:(id)serverName;
-- (BOOL)_sendMessage:(id)message userInfo:(id)info receiveReply:(id *)reply error:(id *)error toTarget:(id)target selector:(SEL)selector context:(void *)context;
-- (BOOL)_sendMessage:(id)message userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(id *)error;
-- (void)registerForMessageName:(id)messageName target:(id)target selector:(SEL)selector;
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info;
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info error:(id *)error;
-- (void)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info toTarget:(id)target selector:(SEL)selector context:(void *)context;
-- (BOOL)sendMessageName:(id)name userInfo:(id)info;
-@end
-
-%hook CPDistributedMessagingCenter
-/*
-- (void)_dispatchMessageNamed:(id)named userInfo:(id)info reply:(id *)reply auditToken:(XXStruct_kUSYWB *)token {
-	%orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:named withObject:@"message" forClass:[self class]];
-}
-*/
-- (id)_initWithServerName:(id)serverName {
-	id r = %orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:serverName withObject:@"serverName" forClass:[self class]];
-	return r;
-}
-- (BOOL)_sendMessage:(id)message userInfo:(id)info receiveReply:(id *)reply error:(id *)error toTarget:(id)target selector:(SEL)selector context:(void *)context {
-	BOOL r = %orig;
-//NSLog(@"unknown instance (%p) of class %@", message, NSStringFromClass([message class]));
-	[[UFSAssociationTable sharedInstance] setAssociation:message withObject:@"message" forClass:[self class]];
-	return r;
-}
-- (BOOL)_sendMessage:(id)message userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(id *)error {
-	BOOL r = %orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:message withObject:@"message" forClass:[self class]];
-	return r;
-}
-- (void)registerForMessageName:(id)messageName target:(id)target selector:(SEL)selector {
-	%orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:messageName withObject:@"message" forClass:[self class]];
-}
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info {
-	id r = %orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
-	return r;
-}
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info error:(id *)error {
-	id r = %orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
-	return r;
-}
-- (void)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info toTarget:(id)target selector:(SEL)selector context:(void *)context {
-	%orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
-}
-- (BOOL)sendMessageName:(id)name userInfo:(id)info {
-	BOOL r = %orig;
-	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
 	return r;
 }
 
