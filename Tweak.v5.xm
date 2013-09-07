@@ -127,24 +127,20 @@ b = [[UFSAssociation sharedInstance] getAssociation:a];
 
 - (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)notificationName object:(id)anObject {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
-	UFSAssociationTableAdd(notificationName, @"notification");
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 }
 
 - (void)postNotification:(NSNotification *)notification {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:[notification name] withObject:@"notification" forClass:[self class]];
-	UFSAssociationTableAdd([notification name], @"notification");
+	[[UFSAssociationTable sharedInstance] setAssociation:[notification name] withObject:@"notification" forClass:[self class]];
 }
 - (void)postNotificationName:(NSString *)notificationName object:(id)anObject {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
-	UFSAssociationTableAdd(notificationName, @"notification");
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 }
 - (void)postNotificationName:(NSString *)notificationName object:(id)anObject userInfo:(NSDictionary *)userInfo {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
-	UFSAssociationTableAdd(notificationName, @"notification");
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 }
 %end
 
@@ -160,29 +156,24 @@ b = [[UFSAssociation sharedInstance] getAssociation:a];
 
 - (id)_initWithServerName:(NSString *)serverName {
 	id r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:serverName withObject:@"serverName" forClass:[self class]];
-	UFSAssociationTableAdd(serverName, @"serverName");
+	[[UFSAssociationTable sharedInstance] setAssociation:serverName withObject:@"serverName" forClass:[self class]];
 	return r;
 }
 - (void)deliverNotification:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
-	UFSAssociationTableAdd(notificationName, @"notification");
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 }
 - (void)postNotificationName:(NSString *)notificationName {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
-	UFSAssociationTableAdd(notificationName, @"notification");
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 }
 - (void)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
-	UFSAssociationTableAdd(notificationName, @"notification");
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 }
 - (BOOL)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo toBundleIdentifier:(NSString *)bundleIdentifier {
 	BOOL r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
-	UFSAssociationTableAdd(notificationName, @"notification");
+	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 	return r;
 }
 
@@ -209,55 +200,46 @@ typedef struct XXStruct_kUSYWB {
 /*
 - (void)_dispatchMessageNamed:(id)named userInfo:(id)info reply:(id *)reply auditToken:(XXStruct_kUSYWB *)token {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:named withObject:@"message" forClass:[self class]];
-	UFSAssociationTableAdd(named, @"message");
+	[[UFSAssociationTable sharedInstance] setAssociation:named withObject:@"message" forClass:[self class]];
 }
 */
 - (id)_initWithServerName:(id)serverName {
 	id r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:serverName withObject:@"serverName" forClass:[self class]];
-	UFSAssociationTableAdd(serverName, @"serverName");
+	[[UFSAssociationTable sharedInstance] setAssociation:serverName withObject:@"serverName" forClass:[self class]];
 	return r;
 }
 - (BOOL)_sendMessage:(id)message userInfo:(id)info receiveReply:(id *)reply error:(id *)error toTarget:(id)target selector:(SEL)selector context:(void *)context {
 	BOOL r = %orig;
 //NSLog(@"unknown instance (%p) of class %@", message, NSStringFromClass([message class]));
-//	[[UFSAssociationTable sharedInstance] setAssociation:message withObject:@"message" forClass:[self class]];
-	UFSAssociationTableAdd(message, @"message");
+	[[UFSAssociationTable sharedInstance] setAssociation:message withObject:@"message" forClass:[self class]];
 	return r;
 }
 - (BOOL)_sendMessage:(id)message userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(id *)error {
 	BOOL r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:message withObject:@"message" forClass:[self class]];
-	UFSAssociationTableAdd(message, @"message");
+	[[UFSAssociationTable sharedInstance] setAssociation:message withObject:@"message" forClass:[self class]];
 	return r;
 }
 - (void)registerForMessageName:(id)messageName target:(id)target selector:(SEL)selector {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:messageName withObject:@"message" forClass:[self class]];
-	UFSAssociationTableAdd(messageName, @"message");
+	[[UFSAssociationTable sharedInstance] setAssociation:messageName withObject:@"message" forClass:[self class]];
 }
 - (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info {
 	id r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
-	UFSAssociationTableAdd(name, @"message");
+	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
 	return r;
 }
 - (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info error:(id *)error {
 	id r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
-	UFSAssociationTableAdd(name, @"message");
+	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
 	return r;
 }
 - (void)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info toTarget:(id)target selector:(SEL)selector context:(void *)context {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
-	UFSAssociationTableAdd(name, @"message");
+	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
 }
 - (BOOL)sendMessageName:(id)name userInfo:(id)info {
 	BOOL r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
-	UFSAssociationTableAdd(name, @"message");
+	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
 	return r;
 }
 
