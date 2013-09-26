@@ -265,25 +265,12 @@ typedef struct XXStruct_kUSYWB {
 
 %end
 
-//End class hooking
-//Start function hooking
-
-//convenient macros
-#define paste(a,b) a ## b
-
-#define fhook(returnValue, name, ...) \
-static returnValue(* paste(original_, name))(__VA_ARGS__);\
-returnValue paste(custom_, name)(__VA_ARGS__)
-
-#define fhookit(name) MSHookFunction(name, paste(custom_, name), &(paste(original_, name)))
-//end macros
-
 @interface CoreFoundationNotificationCenter : NSObject
 @end
 
 @implementation CoreFoundationNotificationCenter
 @end
-/*
+
 static void (*original_CFNotificationCenterAddObserver) (
 	CFNotificationCenterRef center,
 	const void *observer,
@@ -300,16 +287,13 @@ void custom_CFNotificationCenterAddObserver (
 	const void *object,
 	CFNotificationSuspensionBehavior suspensionBehavior
 ) {
-*/
-fhook(void, CFNotificationCenterAddObserver, CFNotificationCenterRef center, const void *observer, CFNotificationCallback callBack, CFStringRef name, const void *object, CFNotificationSuspensionBehavior suspensionBehavior) {
-
 	original_CFNotificationCenterAddObserver(center, observer, callBack, name, object, suspensionBehavior);
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *nameString = (name != NULL)? (NSString *)name:@"all";
 	UFSAssociationTableAdd_(nameString, @"notification", [CoreFoundationNotificationCenter class]);
 	[pool release];
 }
-/*
+
 static void (*original_CFNotificationCenterPostNotification) (
 	CFNotificationCenterRef center,
 	CFStringRef name,
@@ -324,15 +308,12 @@ void custom_CFNotificationCenterPostNotification (
 	CFDictionaryRef userInfo,
 	Boolean deliverImmediately
 ) {
-*/
-fhook(void, CFNotificationCenterPostNotification, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, Boolean deliverImmediately) {
-
 	original_CFNotificationCenterPostNotification(center, name, object, userInfo, deliverImmediately);
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	UFSAssociationTableAdd_((NSString *)name, @"notification", [CoreFoundationNotificationCenter class]);
 	[pool release];
 }
-/*
+
 static void (*original_CFNotificationCenterPostNotificationWithOptions) (
 	CFNotificationCenterRef center,
 	CFStringRef name,
@@ -347,8 +328,6 @@ void custom_CFNotificationCenterPostNotificationWithOptions (
 	CFDictionaryRef userInfo,
 	CFOptionFlags options
 ) {
-*/
-fhook(void, CFNotificationCenterPostNotificationWithOptions, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, CFOptionFlags options) {
 	original_CFNotificationCenterPostNotificationWithOptions(center, name, object, userInfo, options);
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	UFSAssociationTableAdd_((NSString *)name, @"notification", [CoreFoundationNotificationCenter class]);
@@ -359,7 +338,7 @@ fhook(void, CFNotificationCenterPostNotificationWithOptions, CFNotificationCente
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	[UFSAssociationTable sharedInstance];
-/*
+
 	MSHookFunction(
 		CFNotificationCenterAddObserver, 
 		custom_CFNotificationCenterAddObserver, 
@@ -377,10 +356,6 @@ fhook(void, CFNotificationCenterPostNotificationWithOptions, CFNotificationCente
 		custom_CFNotificationCenterPostNotificationWithOptions, 
 		&original_CFNotificationCenterPostNotificationWithOptions
 	);
-*/
-fhookit(CFNotificationCenterAddObserver);
-fhookit(CFNotificationCenterPostNotification);
-fhookit(CFNotificationCenterPostNotificationWithOptions);
 
 	[pool release];
 }
