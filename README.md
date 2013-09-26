@@ -14,8 +14,8 @@ It keeps a list of notifications that come in contact with:
 -   CFNotificationCenterPostNotification
 -   CFNotificationCenterPostNotificationWithOptions
 
-In the future it will also track NSDistributedNotificationCenter;
-Cleared out list of hooked classes and functions: https://ghostbin.com/paste/yyr9w
+In the future it will also track NSDistributedNotificationCenter, and any other class or function that behaves like these.
+<br>Cleared out list of hooked classes and functions: https://ghostbin.com/paste/yyr9w
 
 Designed to be used in cycript with the following commands:
 ?expand
