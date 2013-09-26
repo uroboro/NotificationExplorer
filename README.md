@@ -3,8 +3,16 @@ NotificationExplorer
 
 See what notifications exist at runtime.
 
-It keeps a list of notifications that come in contact with NSSotificationCenter.
-In the future it will also track CPDistributedMessagingCenter, CPDistributedNotificationCenter and NSDistributedNotificationCenter;
+It keeps a list of notifications that come in contact with:
+   NSNotificationCenter class
+   CPDistributedNotificationCenter class
+   CPDistributedMessagingCenter class
+   CFNotificationCenterAddObserver function
+   CFNotificationCenterPostNotification function
+   CFNotificationCenterPostNotificationWithOptions function
+
+In the future it will also track NSDistributedNotificationCenter;
+Cleared out list of hooked classes and functions: https://ghostbin.com/paste/yyr9w
 
 Designed to be used in cycript with the following commands:
 ?expand
