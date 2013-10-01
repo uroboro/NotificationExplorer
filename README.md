@@ -13,12 +13,21 @@ It keeps a list of notifications that come in contact with:
 -   CFNotificationCenterAddObserver
 -   CFNotificationCenterPostNotification
 -   CFNotificationCenterPostNotificationWithOptions
+-   notify_post
+-   notify_register_check
+-   notify_register_signal
+-   notify_register_mach_port
+-   notify_register_file_descriptor
 
-In the future it will also track NSDistributedNotificationCenter, and any other class or function that behaves like these.
+
 <br>Cleared out list of hooked classes and functions: https://ghostbin.com/paste/yyr9w
+In the future it will also track NSDistributedNotificationCenter, and any other class or function that behaves like these.
 
 Designed to be used in cycript with the following commands:
 ?expand
-[[[UFSAssociation sharedInstance] allNotifications] description]
+[[[UFSAssociationTable sharedInstance] allAssociationsDictionary] description]
 
-UFSAssosiation may change its name without notice to reflect the objective of this project. The reason is that this class was created to replace objc_{get,set}AssosiatedObject() functions as they are not available in the iOS 3.2 SDK.
+To save the table of notifications, you can do:
+[[[UFSAssociationTable sharedInstance] allAssociationsDictionary] writeToFile:@"/User/process.notifications.plist" atomically:YES]
+
+UFSAssociation and UFSAssociationTable may change names without notice to reflect the objective of this project. The reason is that this class was created to replace objc_{get,set}AssosiatedObject() functions as they are not available in the iOS 3.2 SDK.
