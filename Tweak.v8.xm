@@ -1,4 +1,3 @@
-#import <notify.h>
 // As associated objects were not supported until iOS 4, the work around I made for this single class was a mutable dictionary within a shared object. Now that I think about it, it could have been just a global dictionary
 @interface UFSAssociation : NSObject {
 }
@@ -62,7 +61,6 @@ b = [[UFSAssociation sharedInstance] getAssociation:a];
 
 + (id)sharedInstance;
 
-- (NSDictionary *)allAssociationsDictionary;
 - (NSArray *)allNotificationsForClass:(Class)aClass;
 
 - (void)setAssociation:(id)key withObject:(id)object forClass:(Class)aClass;
@@ -87,19 +85,6 @@ b = [[UFSAssociation sharedInstance] getAssociation:a];
 		self.associations = [[NSMutableDictionary alloc] init];
 	}
 	return self;
-}
-
-- (NSDictionary *)allAssociationsDictionary {
-	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-	NSArray *keys = [[self associations] allKeys];
-	for (NSUInteger i = 0; i < [keys count]; i++) {
-		id key = [keys objectAtIndex:i];
-		NSDictionary *dict = [[[self associations] objectForKey:key] associations];
-		[dictionary setObject:dict forKey:key];
-	}
-	NSDictionary *r = [NSDictionary dictionaryWithDictionary:dictionary];
-	[dictionary release];
-	return r;
 }
 
 - (NSArray *)allNotificationsForClass:(Class)aClass {
@@ -370,53 +355,6 @@ fhook(void, CFNotificationCenterPostNotificationWithOptions, CFNotificationCente
 	[pool release];
 }
 
-@interface CNotifications : NSObject
-@end
-
-@implementation CNotifications
-@end
-
-fhook(uint32_t, notify_post, const char *name) {
-	uint32_t r = original_notify_post(name);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *nameString = [NSString stringWithUTF8String:name];
-	UFSAssociationTableAdd_(nameString, @"notification", [CNotifications class]);
-	[pool release];
-	return r;
-}
-fhook(uint32_t, notify_register_check, const char *name, int *out_token) {
-	uint32_t r = original_notify_register_check(name, out_token);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *nameString = [NSString stringWithUTF8String:name];
-	UFSAssociationTableAdd_(nameString, @"notification", [CNotifications class]);
-	[pool release];
-	return r;
-}
-fhook(uint32_t, notify_register_signal, const char *name, int sig, int *out_token) {
-	uint32_t r = original_notify_register_signal(name, sig, out_token);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *nameString = [NSString stringWithUTF8String:name];
-	UFSAssociationTableAdd_(nameString, @"notification", [CNotifications class]);
-	[pool release];
-	return r;
-}
-fhook(uint32_t, notify_register_mach_port, const char *name, mach_port_t *notify_port, int flags, int *out_token) {
-	uint32_t r = original_notify_register_mach_port(name, notify_port, flags, out_token);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *nameString = [NSString stringWithUTF8String:name];
-	UFSAssociationTableAdd_(nameString, @"notification", [CNotifications class]);
-	[pool release];
-	return r;
-}
-fhook(uint32_t, notify_register_file_descriptor, const char *name, int *notify_fd, int flags, int *out_token) {
-	uint32_t r = original_notify_register_file_descriptor(name, notify_fd, flags, out_token);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *nameString = [NSString stringWithUTF8String:name];
-	UFSAssociationTableAdd_(nameString, @"notification", [CNotifications class]);
-	[pool release];
-	return r;
-}
-
 %ctor {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -443,12 +381,6 @@ fhook(uint32_t, notify_register_file_descriptor, const char *name, int *notify_f
 fhookit(CFNotificationCenterAddObserver);
 fhookit(CFNotificationCenterPostNotification);
 fhookit(CFNotificationCenterPostNotificationWithOptions);
-
-fhookit(notify_post);
-fhookit(notify_register_check);
-fhookit(notify_register_signal);
-fhookit(notify_register_mach_port);
-fhookit(notify_register_file_descriptor);
 
 	[pool release];
 }
