@@ -144,23 +144,19 @@ UFSAssociationTableAdd_(name, comment, [self class])
 
 - (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)notificationName object:(id)anObject {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 	UFSAssociationTableAdd(notificationName, @"notification");
 }
 
 - (void)postNotification:(NSNotification *)notification {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:[notification name] withObject:@"notification" forClass:[self class]];
 	UFSAssociationTableAdd([notification name], @"notification");
 }
 - (void)postNotificationName:(NSString *)notificationName object:(id)anObject {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 	UFSAssociationTableAdd(notificationName, @"notification");
 }
 - (void)postNotificationName:(NSString *)notificationName object:(id)anObject userInfo:(NSDictionary *)userInfo {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 	UFSAssociationTableAdd(notificationName, @"notification");
 }
 %end
@@ -177,28 +173,23 @@ UFSAssociationTableAdd_(name, comment, [self class])
 
 - (id)_initWithServerName:(NSString *)serverName {
 	id r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:serverName withObject:@"serverName" forClass:[self class]];
 	UFSAssociationTableAdd(serverName, @"serverName");
 	return r;
 }
 - (void)deliverNotification:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 	UFSAssociationTableAdd(notificationName, @"notification");
 }
 - (void)postNotificationName:(NSString *)notificationName {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 	UFSAssociationTableAdd(notificationName, @"notification");
 }
 - (void)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 	UFSAssociationTableAdd(notificationName, @"notification");
 }
 - (BOOL)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo toBundleIdentifier:(NSString *)bundleIdentifier {
 	BOOL r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:notificationName withObject:@"notification" forClass:[self class]];
 	UFSAssociationTableAdd(notificationName, @"notification");
 	return r;
 }
@@ -232,48 +223,40 @@ typedef struct XXStruct_kUSYWB {
 */
 - (id)_initWithServerName:(id)serverName {
 	id r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:serverName withObject:@"serverName" forClass:[self class]];
 	UFSAssociationTableAdd(serverName, @"serverName");
 	return r;
 }
 - (BOOL)_sendMessage:(id)message userInfo:(id)info receiveReply:(id *)reply error:(id *)error toTarget:(id)target selector:(SEL)selector context:(void *)context {
 	BOOL r = %orig;
 //NSLog(@"unknown instance (%p) of class %@", message, NSStringFromClass([message class]));
-//	[[UFSAssociationTable sharedInstance] setAssociation:message withObject:@"message" forClass:[self class]];
 	UFSAssociationTableAdd(message, @"message");
 	return r;
 }
 - (BOOL)_sendMessage:(id)message userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(id *)error {
 	BOOL r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:message withObject:@"message" forClass:[self class]];
 	UFSAssociationTableAdd(message, @"message");
 	return r;
 }
 - (void)registerForMessageName:(id)messageName target:(id)target selector:(SEL)selector {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:messageName withObject:@"message" forClass:[self class]];
 	UFSAssociationTableAdd(messageName, @"message");
 }
 - (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info {
 	id r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
 	UFSAssociationTableAdd(name, @"message");
 	return r;
 }
 - (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info error:(id *)error {
 	id r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
 	UFSAssociationTableAdd(name, @"message");
 	return r;
 }
 - (void)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info toTarget:(id)target selector:(SEL)selector context:(void *)context {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
 	UFSAssociationTableAdd(name, @"message");
 }
 - (BOOL)sendMessageName:(id)name userInfo:(id)info {
 	BOOL r = %orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:name withObject:@"message" forClass:[self class]];
 	UFSAssociationTableAdd(name, @"message");
 	return r;
 }
@@ -284,6 +267,7 @@ typedef struct XXStruct_kUSYWB {
 //Start function hooking
 
 //convenient macros
+
 #define paste(a,b) a ## b
 
 #define fhook(returnValue, name, ...) \
@@ -291,6 +275,7 @@ static returnValue(* paste(original_, name))(__VA_ARGS__);\
 returnValue paste(custom_, name)(__VA_ARGS__)
 
 #define fhookit(name) MSHookFunction(name, paste(custom_, name), &(paste(original_, name)))
+
 //end macros
 
 @interface CoreFoundationNotificationCenter : NSObject
@@ -298,24 +283,7 @@ returnValue paste(custom_, name)(__VA_ARGS__)
 
 @implementation CoreFoundationNotificationCenter
 @end
-/*
-static void (*original_CFNotificationCenterAddObserver) (
-	CFNotificationCenterRef center,
-	const void *observer,
-	CFNotificationCallback callBack,
-	CFStringRef name,
-	const void *object,
-	CFNotificationSuspensionBehavior suspensionBehavior
-);
-void custom_CFNotificationCenterAddObserver (
-	CFNotificationCenterRef center,
-	const void *observer,
-	CFNotificationCallback callBack,
-	CFStringRef name,
-	const void *object,
-	CFNotificationSuspensionBehavior suspensionBehavior
-) {
-*/
+
 fhook(void, CFNotificationCenterAddObserver, CFNotificationCenterRef center, const void *observer, CFNotificationCallback callBack, CFStringRef name, const void *object, CFNotificationSuspensionBehavior suspensionBehavior) {
 
 	original_CFNotificationCenterAddObserver(center, observer, callBack, name, object, suspensionBehavior);
@@ -324,22 +292,7 @@ fhook(void, CFNotificationCenterAddObserver, CFNotificationCenterRef center, con
 	UFSAssociationTableAdd_(nameString, @"notification", [CoreFoundationNotificationCenter class]);
 	[pool release];
 }
-/*
-static void (*original_CFNotificationCenterPostNotification) (
-	CFNotificationCenterRef center,
-	CFStringRef name,
-	const void *object,
-	CFDictionaryRef userInfo,
-	Boolean deliverImmediately
-);
-void custom_CFNotificationCenterPostNotification (
-	CFNotificationCenterRef center,
-	CFStringRef name,
-	const void *object,
-	CFDictionaryRef userInfo,
-	Boolean deliverImmediately
-) {
-*/
+
 fhook(void, CFNotificationCenterPostNotification, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, Boolean deliverImmediately) {
 
 	original_CFNotificationCenterPostNotification(center, name, object, userInfo, deliverImmediately);
@@ -347,22 +300,7 @@ fhook(void, CFNotificationCenterPostNotification, CFNotificationCenterRef center
 	UFSAssociationTableAdd_((NSString *)name, @"notification", [CoreFoundationNotificationCenter class]);
 	[pool release];
 }
-/*
-static void (*original_CFNotificationCenterPostNotificationWithOptions) (
-	CFNotificationCenterRef center,
-	CFStringRef name,
-	const void *object,
-	CFDictionaryRef userInfo,
-	CFOptionFlags options
-);
-void custom_CFNotificationCenterPostNotificationWithOptions (
-	CFNotificationCenterRef center,
-	CFStringRef name,
-	const void *object,
-	CFDictionaryRef userInfo,
-	CFOptionFlags options
-) {
-*/
+
 fhook(void, CFNotificationCenterPostNotificationWithOptions, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, CFOptionFlags options) {
 	original_CFNotificationCenterPostNotificationWithOptions(center, name, object, userInfo, options);
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -421,34 +359,16 @@ fhook(uint32_t, notify_register_file_descriptor, const char *name, int *notify_f
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	[UFSAssociationTable sharedInstance];
-/*
-	MSHookFunction(
-		CFNotificationCenterAddObserver, 
-		custom_CFNotificationCenterAddObserver, 
-		&original_CFNotificationCenterAddObserver
-	);
 
-	MSHookFunction(
-		CFNotificationCenterPostNotification, 
-		custom_CFNotificationCenterPostNotification, 
-		&original_CFNotificationCenterPostNotification
-	);
+	fhookit(CFNotificationCenterAddObserver);
+	fhookit(CFNotificationCenterPostNotification);
+	fhookit(CFNotificationCenterPostNotificationWithOptions);
 
-	MSHookFunction(
-		CFNotificationCenterPostNotificationWithOptions, 
-		custom_CFNotificationCenterPostNotificationWithOptions, 
-		&original_CFNotificationCenterPostNotificationWithOptions
-	);
-*/
-fhookit(CFNotificationCenterAddObserver);
-fhookit(CFNotificationCenterPostNotification);
-fhookit(CFNotificationCenterPostNotificationWithOptions);
-
-fhookit(notify_post);
-fhookit(notify_register_check);
-fhookit(notify_register_signal);
-fhookit(notify_register_mach_port);
-fhookit(notify_register_file_descriptor);
+	fhookit(notify_post);
+	fhookit(notify_register_check);
+	fhookit(notify_register_signal);
+	fhookit(notify_register_mach_port);
+	fhookit(notify_register_file_descriptor);
 
 	[pool release];
 }
