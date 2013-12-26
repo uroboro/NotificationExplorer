@@ -20,7 +20,7 @@ It keeps a list of notifications that come in contact with:
 -   notify_register_file_descriptor
 
 
-Cleared out list of hooked classes and functions: https://ghostbin.com/paste/yyr9w<br>
+Cleared out list of hooked classes and functions: Hooks.h<br>
 In the future it will also track NSDistributedNotificationCenter, and any other class or function that behaves like these.
 
 Designed to be used in cycript with the following commands:<br>

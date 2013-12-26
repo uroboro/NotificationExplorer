@@ -202,7 +202,7 @@ typedef struct XXStruct_kUSYWB {
 
 @interface CPDistributedMessagingCenter : NSObject {
 }
-- (void)_dispatchMessageNamed:(id)named userInfo:(id)info reply:(id *)reply auditToken:(XXStruct_kUSYWB *)token;
+- (void)_dispatchMessageNamed:(id)named userInfo:(id)info reply:(id *)reply auditToken:(void *)token; //token being a XXStruct_kUSYWB
 - (id)_initWithServerName:(id)serverName;
 - (BOOL)_sendMessage:(id)message userInfo:(id)info receiveReply:(id *)reply error:(id *)error toTarget:(id)target selector:(SEL)selector context:(void *)context;
 - (BOOL)_sendMessage:(id)message userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(id *)error;
@@ -214,13 +214,13 @@ typedef struct XXStruct_kUSYWB {
 @end
 
 %hook CPDistributedMessagingCenter
-/*
-- (void)_dispatchMessageNamed:(id)named userInfo:(id)info reply:(id *)reply auditToken:(XXStruct_kUSYWB *)token {
+
+- (void)_dispatchMessageNamed:(id)named userInfo:(id)info reply:(id *)reply auditToken:(void *)token {
 	%orig;
-//	[[UFSAssociationTable sharedInstance] setAssociation:named withObject:@"message" forClass:[self class]];
+//NSLog(@"unknown instance (%p) of class %@", message, NSStringFromClass([message class]));
 	UFSAssociationTableAdd(named, @"message");
 }
-*/
+
 - (id)_initWithServerName:(id)serverName {
 	id r = %orig;
 	UFSAssociationTableAdd(serverName, @"serverName");
@@ -285,7 +285,6 @@ returnValue paste(custom_, name)(__VA_ARGS__)
 @end
 
 fhook(void, CFNotificationCenterAddObserver, CFNotificationCenterRef center, const void *observer, CFNotificationCallback callBack, CFStringRef name, const void *object, CFNotificationSuspensionBehavior suspensionBehavior) {
-
 	original_CFNotificationCenterAddObserver(center, observer, callBack, name, object, suspensionBehavior);
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *nameString = (name != NULL)? (NSString *)name:@"all";
@@ -294,7 +293,6 @@ fhook(void, CFNotificationCenterAddObserver, CFNotificationCenterRef center, con
 }
 
 fhook(void, CFNotificationCenterPostNotification, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, Boolean deliverImmediately) {
-
 	original_CFNotificationCenterPostNotification(center, name, object, userInfo, deliverImmediately);
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	UFSAssociationTableAdd_((NSString *)name, @"notification", [CoreFoundationNotificationCenter class]);
