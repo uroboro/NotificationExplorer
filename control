@@ -3,7 +3,7 @@ Name: Notification Explorer
 Depends: mobilesubstrate
 Version: 0.0.1
 Architecture: iphoneos-arm
-Description: See what notifications exist at runtime
+Description: An awesome MobileSubstrate tweak!
 Maintainer: uroboro<uroboro.845@gmail.com>
 Author: uroboro<uroboro.845@gmail.com>
 Section: Tweaks
