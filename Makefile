@@ -22,9 +22,12 @@ and:
 	
 
 _install:
-	@sudo -c 'make internal-install'
+	@sudo make internal-install
 
 #now do 'make a clean package and _install'
 
 remove:
 	@apt-get remove $(THEOS_PACKAGE_NAME)
+
+after-install::
+	install.exec "killall -9 SpringBoard backboardd"
