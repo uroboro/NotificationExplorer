@@ -25,10 +25,7 @@ In the future it will also track NSDistributedNotificationCenter, and any other 
 
 Designed to be used in cycript with the following commands:<br>
 ?expand<br>
-[[[UFSAssociationTable sharedInstance] allAssociationsDictionary] description]
+[[UFSNotificationList sharedInstance].notifications description]
 
 To save the table of notifications, you can do:<br>
-[[[UFSAssociationTable sharedInstance] allAssociationsDictionary] writeToFile:@"/User/process.notifications.plist" atomically:YES]
-
-UFSAssociation and UFSAssociationTable may change names without notice to reflect the objective of this project.<br>
-The reason is that this class was created to replace objc_{get,set}AssosiatedObject() functions as they are not available in the iOS 3.2 SDK.
+[[UFSNotificationList sharedInstance].notifications writeToFile:@"/User/process.notifications.plist" atomically:YES]
