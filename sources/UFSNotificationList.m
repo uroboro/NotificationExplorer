@@ -4,6 +4,7 @@
 @implementation UFSNotificationList
 
 @synthesize notifications = _notifications;
+@synthesize enabled = _enabled;
 
 + (instancetype)sharedInstance {
 	static UFSNotificationList *_sharedInstance = nil;
@@ -15,17 +16,24 @@
 }
 
 - (id)init {
-    if ((self = [super init])) {
-        _notifications = [[NSMutableDictionary alloc] init];
-    }
-    return self;
+	if ((self = [super init])) {
+		_notifications = [[NSMutableDictionary alloc] init];
+	}
+	return self;
 }
 - (void)dealloc {
-    [_notifications release];
-    [super dealloc];
+	[_notifications release];
+	[super dealloc];
 }
 
-- (void)prepareNotificationKey:(NSString *)notificationName {
+- (BOOL)prepareNotificationKey:(NSString *)notificationName {
+	if (!self.isEnabled) {
+		return NO;
+	}
+
+	if (!notificationName) {
+		return NO;
+	}
 	NSMutableDictionary *d;
 	if (!(d = [_notifications objectForKey:notificationName])) {
 		d = [NSMutableDictionary dictionaryWithCapacity:1];
@@ -37,23 +45,53 @@
 	if (![d objectForKey:@"actions"]) {
 		[d setObject:[NSMutableArray arrayWithCapacity:1] forKey:@"actions"];
 	}
+
+	return YES;
 }
-- (void)addAPI:(NSString *)api toNotification:(NSString *)notificationName {
-	[self prepareNotificationKey:notificationName];
+- (BOOL)addAPI:(NSString *)api toNotification:(NSString *)notificationName {
+	if (![self prepareNotificationKey:notificationName]) {
+		return NO;
+	}
 	[[[_notifications objectForKey:notificationName] objectForKey:@"APIs"] addObject:api];
+
+	return YES;
 }
-- (void)addAction:(NSString *)action toNotification:(NSString *)notificationName {
-	[self prepareNotificationKey:notificationName];
+- (BOOL)addAction:(NSString *)action toNotification:(NSString *)notificationName {
+	if (![self prepareNotificationKey:notificationName]) {
+		return NO;
+	}
 	[[[_notifications objectForKey:notificationName] objectForKey:@"actions"] addObject:action];
+
+	return YES;
 }
-- (void)setType:(NSString *)type toNotification:(NSString *)notificationName {
-	[self prepareNotificationKey:notificationName];
+- (BOOL)setType:(NSString *)type toNotification:(NSString *)notificationName {
+	if (![self prepareNotificationKey:notificationName]) {
+		return NO;
+	}
 	[[_notifications objectForKey:notificationName] setObject:type forKey:@"type"];
+
+	return YES;
 }
-- (void)addAPI:(NSString *)api action:(NSString *)action type:(NSString *)type toNotification:(NSString *)notificationName {
-	[self addAPI:api toNotification:notificationName];
-	[self addAction:action toNotification:notificationName];
-	[self setType:type toNotification:notificationName];
+- (BOOL)addAPI:(NSString *)api action:(NSString *)action type:(NSString *)type toNotification:(NSString *)notificationName {
+	if (![self prepareNotificationKey:notificationName]) {
+		return NO;
+	}
+	if (![self addAPI:api toNotification:notificationName]) {
+		return NO;
+	}
+	if (![self addAction:action toNotification:notificationName]) {
+		return NO;
+	}
+	if (![self setType:type toNotification:notificationName]) {
+		return NO;
+	}
+
+	return YES;
+}
+
+- (NSString *)fileName {
+	NSProcessInfo *p = [NSProcessInfo processInfo];
+	return [NSString stringWithFormat:@"%@_(%d)_-_%@", [p processName], [p processIdentifier], [p globallyUniqueString]];
 }
 
 @end

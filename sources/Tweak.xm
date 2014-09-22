@@ -6,7 +6,7 @@ NSLog(@"\033[1;36m(%s) in [%s:%d]\033[0m \033[5;32;40m:::\033[0m \033[0;31m%@\03
 
 #define CMCLogObject(object) CMCLog(@"unknown instance (%p) of class %@", object, NSStringFromClass([object class])
 
-//convenient macros
+// convenient macros
 
 #define STRINGIFY_(x) # x
 #define STRINGIFY(x) STRINGIFY_(x)
@@ -14,18 +14,9 @@ NSLog(@"\033[1;36m(%s) in [%s:%d]\033[0m \033[5;32;40m:::\033[0m \033[0;31m%@\03
 #define PASTE_(a,b) a ## b
 #define PASTE(a,b) PASTE_(a,b)
 
-#define fhook_prefix_orig	original_
-#define fhook_prefix_custom custom_
-#define fhook(returnValue, name, ...) \
-static returnValue(* PASTE(fhook_prefix_orig, name))(__VA_ARGS__);\
-returnValue PASTE(fhook_prefix_custom, name)(__VA_ARGS__)
+#define MSHookFunctionAuto(name) MSHookFunction(name, MSHake(name))
 
-#define fhook_orig(name, ...) PASTE(fhook_prefix_orig, name)(__VA_ARGS__)
-
-#define fhookit(name) MSHookFunction(name, PASTE(fhook_prefix_custom, name), &(PASTE(fhook_prefix_orig, name)))
-
-//end macros
-
+// macros end
 %group gNSNotificationCenter
 %hook NSNotificationCenter
 
@@ -155,64 +146,64 @@ typedef struct XXStruct_kUSYWB {
 //Start function hooking
 
 // CFNotificationCenter
-fhook(void, CFNotificationCenterAddObserver, CFNotificationCenterRef center, const void *observer, CFNotificationCallback callBack, CFStringRef name, const void *object, CFNotificationSuspensionBehavior suspensionBehavior) {
-	original_CFNotificationCenterAddObserver(center, observer, callBack, name, object, suspensionBehavior);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+MSHook(void, CFNotificationCenterAddObserver, CFNotificationCenterRef center, const void *observer, CFNotificationCallback callBack, CFStringRef name, const void *object, CFNotificationSuspensionBehavior suspensionBehavior) {
+	_CFNotificationCenterAddObserver(center, observer, callBack, name, object, suspensionBehavior);
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSString *notificationName = (name != NULL)? (NSString *)name:@"all";
 	[[UFSNotificationList sharedInstance] addAPI:@"CFNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
 	[pool release];
 }
-fhook(void, CFNotificationCenterPostNotification, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, Boolean deliverImmediately) {
-	original_CFNotificationCenterPostNotification(center, name, object, userInfo, deliverImmediately);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+MSHook(void, CFNotificationCenterPostNotification, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, Boolean deliverImmediately) {
+	_CFNotificationCenterPostNotification(center, name, object, userInfo, deliverImmediately);
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSString *notificationName = (NSString *)name;
 	[[UFSNotificationList sharedInstance] addAPI:@"CFNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
 	[pool release];
 }
-fhook(void, CFNotificationCenterPostNotificationWithOptions, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, CFOptionFlags options) {
-	original_CFNotificationCenterPostNotificationWithOptions(center, name, object, userInfo, options);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+MSHook(void, CFNotificationCenterPostNotificationWithOptions, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, CFOptionFlags options) {
+	_CFNotificationCenterPostNotificationWithOptions(center, name, object, userInfo, options);
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSString *notificationName = (NSString *)name;
 	[[UFSNotificationList sharedInstance] addAPI:@"CFNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
 	[pool release];
 }
 
 // notify_*
-fhook(uint32_t, notify_post, const char *name) {
-	uint32_t r = original_notify_post(name);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+MSHook(uint32_t, notify_post, const char *name) {
+	uint32_t r = _notify_post(name);
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSString *notificationName = [NSString stringWithUTF8String:name];
 	[[UFSNotificationList sharedInstance] addAPI:@"CNotifications" action:@"post" type:@"notification" toNotification:notificationName];;
 	[pool release];
 	return r;
 }
-fhook(uint32_t, notify_register_check, const char *name, int *out_token) {
-	uint32_t r = original_notify_register_check(name, out_token);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+MSHook(uint32_t, notify_register_check, const char *name, int *out_token) {
+	uint32_t r = _notify_register_check(name, out_token);
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSString *notificationName = [NSString stringWithUTF8String:name];
 	[[UFSNotificationList sharedInstance] addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];;
 	[pool release];
 	return r;
 }
-fhook(uint32_t, notify_register_signal, const char *name, int sig, int *out_token) {
-	uint32_t r = original_notify_register_signal(name, sig, out_token);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+MSHook(uint32_t, notify_register_signal, const char *name, int sig, int *out_token) {
+	uint32_t r = _notify_register_signal(name, sig, out_token);
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSString *notificationName = [NSString stringWithUTF8String:name];
 	[[UFSNotificationList sharedInstance] addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];;
 	[pool release];
 	return r;
 }
-fhook(uint32_t, notify_register_mach_port, const char *name, mach_port_t *notify_port, int flags, int *out_token) {
-	uint32_t r = original_notify_register_mach_port(name, notify_port, flags, out_token);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+MSHook(uint32_t, notify_register_mach_port, const char *name, mach_port_t *notify_port, int flags, int *out_token) {
+	uint32_t r = _notify_register_mach_port(name, notify_port, flags, out_token);
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSString *notificationName = [NSString stringWithUTF8String:name];
 	[[UFSNotificationList sharedInstance] addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];;
 	[pool release];
 	return r;
 }
-fhook(uint32_t, notify_register_file_descriptor, const char *name, int *notify_fd, int flags, int *out_token) {
-	uint32_t r = original_notify_register_file_descriptor(name, notify_fd, flags, out_token);
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+MSHook(uint32_t, notify_register_file_descriptor, const char *name, int *notify_fd, int flags, int *out_token) {
+	uint32_t r = _notify_register_file_descriptor(name, notify_fd, flags, out_token);
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSString *notificationName = [NSString stringWithUTF8String:name];
 	[[UFSNotificationList sharedInstance] addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];;
 	[pool release];
@@ -220,12 +211,12 @@ fhook(uint32_t, notify_register_file_descriptor, const char *name, int *notify_f
 }
 
 %ctor {
-	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.Facebook.Messenger"]) {
-		return;
-	}
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	[UFSNotificationList sharedInstance];
+
+	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.Facebook.Messenger"]) {
+		[[UFSNotificationList sharedInstance] setEnabled:NO];
+	}
 
 	if (%c(NSNotificationCenter)){
 		CMCLog(@"Initing group: %s", STRINGIFY(PASTE(g,NSNotificationCenter)));
@@ -241,13 +232,13 @@ fhook(uint32_t, notify_register_file_descriptor, const char *name, int *notify_f
 	}
 	[pool release];
 
-	fhookit(CFNotificationCenterAddObserver);
-	fhookit(CFNotificationCenterPostNotification);
-	fhookit(CFNotificationCenterPostNotificationWithOptions);
+	MSHookFunctionAuto(CFNotificationCenterAddObserver);
+	MSHookFunctionAuto(CFNotificationCenterPostNotification);
+	MSHookFunctionAuto(CFNotificationCenterPostNotificationWithOptions);
 
-	fhookit(notify_post);
-	fhookit(notify_register_check);
-	fhookit(notify_register_signal);
-	fhookit(notify_register_mach_port);
-	fhookit(notify_register_file_descriptor);
+	MSHookFunctionAuto(notify_post);
+	MSHookFunctionAuto(notify_register_check);
+	MSHookFunctionAuto(notify_register_signal);
+	MSHookFunctionAuto(notify_register_mach_port);
+	MSHookFunctionAuto(notify_register_file_descriptor);
 }
