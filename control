@@ -4,6 +4,6 @@ Depends: mobilesubstrate
 Version: 0.0.1
 Architecture: iphoneos-arm
 Description: An awesome MobileSubstrate tweak!
-Maintainer: uroboro<uroboro.845@gmail.com>
-Author: uroboro<uroboro.845@gmail.com>
+Maintainer: uroboro <uroboro.845@gmail.com>
+Author: uroboro <uroboro.845@gmail.com>
 Section: Tweaks

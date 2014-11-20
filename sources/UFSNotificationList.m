@@ -10,14 +10,14 @@
 	static UFSNotificationList *_sharedInstance = nil;
 	static dispatch_once_t token = 0;
 	dispatch_once(&token, ^{
-		_sharedInstance = [[UFSNotificationList alloc] init];
+		_sharedInstance = [UFSNotificationList new];
 	});
 	return _sharedInstance;
 }
 
 - (id)init {
 	if ((self = [super init])) {
-		_notifications = [[NSMutableDictionary alloc] init];
+		_notifications = [NSMutableDictionary new];
 	}
 	return self;
 }
