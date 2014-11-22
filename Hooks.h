@@ -1,22 +1,23 @@
 @interface NSNotificationCenter : NSObject {
 }
-- (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)notificationName object:(id)anObject;
+- (void)addObserver:(id)observer selector:(SEL)selector name:(NSString *)notificationName object:(id)notificationSender;
+- (id<NSObject>)addObserverForName:(NSString *)name object:(id)notificationSender queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSNotification *note))block;
 - (void)postNotification:(NSNotification *)notification;
-- (void)postNotificationName:(NSString *)notificationName object:(id)anObject;
-- (void)postNotificationName:(NSString *)notificationName object:(id)anObject userInfo:(NSDictionary *)userInfo;
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender;
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo;
 @end
 
 @interface NSDistributedNotificationCenter : NSNotificationCenter {
 }
-- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)notificationName object:(id)arg4;
-- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)notificationName object:(id)arg4 suspensionBehavior:(unsigned int)arg5;
-- (id)addObserverForName:(id)notificationName object:(id)arg2 queue:(id)arg3 usingBlock:(id)arg4;
-- (id)addObserverForName:(id)notificationName object:(id)arg2 suspensionBehavior:(unsigned int)arg3 queue:(id)arg4 usingBlock:(id)arg5;
-- (void)postNotification:(id)notificationName;
-- (void)postNotificationName:(id)notificationName object:(id)arg2;
-- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3;
-- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 options:(unsigned int)arg4;
-- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 deliverImmediately:(BOOL)arg4;
+- (void)addObserver:(id)observer selector:(SEL)selector name:(NSString *)notificationName object:(id)notificationSender;
+- (void)addObserver:(id)observer selector:(SEL)selector name:(NSString *)notificationName object:(id)notificationSender suspensionBehavior:(NSNotificationSuspensionBehavior)suspensionBehavior;
+- (id)addObserverForName:(NSString *)notificationName object:(id)notificationSender queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSNotification *note))block;
+- (id)addObserverForName:(NSString *)notificationName object:(id)notificationSender suspensionBehavior:(NSNotificationSuspensionBehavior)suspensionBehavior queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSNotification *note))block;
+- (void)postNotification:(NSString *)notificationName;
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender;
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo;
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo options:(NSUInteger)notificationOptions;
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo deliverImmediately:(BOOL)deliverImmediately;
 @end
 
 @interface CPDistributedNotificationCenter : NSObject {
@@ -35,14 +36,14 @@ typedef struct XXStruct_kUSYWB {
 @interface CPDistributedMessagingCenter : NSObject {
 }
 - (id)_initWithServerName:(id)serverName;
-- (void)_dispatchMessageNamed:(id)named userInfo:(id)info reply:(id *)reply auditToken:(void *)token; //token being a XXStruct_kUSYWB
+- (void)_dispatchMessageNamed:(id)named userInfo:(NSDictionary *)userInfo reply:(id *)reply auditToken:(void *)token; //token being a XXStruct_kUSYWB
 - (void)registerForMessageName:(id)messageName target:(id)target selector:(SEL)selector;
-- (BOOL)_sendMessage:(id)message userInfo:(id)info receiveReply:(id *)reply error:(id *)error toTarget:(id)target selector:(SEL)selector context:(void *)context;
-- (BOOL)_sendMessage:(id)message userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(id *)error;
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info;
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info error:(id *)error;
-- (void)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info toTarget:(id)target selector:(SEL)selector context:(void *)context;
-- (BOOL)sendMessageName:(id)name userInfo:(id)info;
+- (BOOL)_sendMessage:(id)message userInfo:(NSDictionary *)userInfo receiveReply:(id *)reply error:(NSError **)error toTarget:(id)target selector:(SEL)selector context:(void *)context;
+- (BOOL)_sendMessage:(id)message userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(NSError **)error;
+- (id)sendMessageAndReceiveReplyName:(id)name userInfo:NSDictionary *userInfo;
+- (id)sendMessageAndReceiveReplyName:(id)name userInfo:NSDictionary *userInfo error:(NSError **)error;
+- (void)sendMessageAndReceiveReplyName:(id)name userInfo:(NSDictionary *)userInfo toTarget:(id)target selector:(SEL)selector context:(void *)context;
+- (BOOL)sendMessageName:(id)name userInfo:(NSDictionary *)userInfo;
 @end
 
 void CFNotificationCenterAddObserver(CFNotificationCenterRef center, const void *observer, CFNotificationCallback callBack, CFStringRef name, const void *object, CFNotificationSuspensionBehavior suspensionBehavior);
