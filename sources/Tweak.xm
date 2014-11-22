@@ -22,6 +22,7 @@
 static UFSNotificationList *sharedNotificationList;
 
 %group gNSNotificationCenter
+
 %hook NSNotificationCenter
 
 - (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)notificationName object:(id)anObject {
@@ -42,7 +43,64 @@ static UFSNotificationList *sharedNotificationList;
 	[sharedNotificationList addAPI:@"NSNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
 }
 %end
+
 %end /* gNSNotificationCenter */
+
+%group gNSDistributedNotificationCenter
+
+@interface NSDistributedNotificationCenter : NSNotificationCenter {
+}
+- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)notificationName object:(id)arg4;
+- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)notificationName object:(id)arg4 suspensionBehavior:(unsigned int)arg5;
+- (id)addObserverForName:(id)notificationName object:(id)arg2 queue:(id)arg3 usingBlock:(id)arg4;
+- (id)addObserverForName:(id)notificationName object:(id)arg2 suspensionBehavior:(unsigned int)arg3 queue:(id)arg4 usingBlock:(id)arg5;
+- (void)postNotification:(id)notificationName;
+- (void)postNotificationName:(id)notificationName object:(id)arg2;
+- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3;
+- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 options:(unsigned int)arg4;
+- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 deliverImmediately:(BOOL)arg4;
+@end
+
+%hook NSDistributedNotificationCenter
+- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)notificationName object:(id)arg4 {
+	%orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
+}
+- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)notificationName object:(id)arg4 suspensionBehavior:(unsigned int)arg5 {
+	%orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
+}
+- (id)addObserverForName:(id)notificationName object:(id)arg2 queue:(id)arg3 usingBlock:(id)arg4 {
+	%orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
+}
+- (id)addObserverForName:(id)notificationName object:(id)arg2 suspensionBehavior:(unsigned int)arg3 queue:(id)arg4 usingBlock:(id)arg5 {
+	%orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
+}
+- (void)postNotification:(id)notificationName {
+	%orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+}
+- (void)postNotificationName:(id)notificationName object:(id)arg2 {
+	%orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+}
+- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 {
+	%orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+}
+- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 options:(unsigned int)arg4 {
+	%orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+}
+- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 deliverImmediately:(BOOL)arg4 {
+	%orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+}
+%end
+
+%end
 
 %group gCPDistributedNotificationCenter
 
@@ -78,6 +136,7 @@ static UFSNotificationList *sharedNotificationList;
 	return r;
 }
 %end
+
 %end /* gCPDistributedNotificationCenter */
 
 %group gCPDistributedMessagingCenter
@@ -143,6 +202,7 @@ typedef struct XXStruct_kUSYWB {
 	return r;
 }
 %end
+
 %end /* gCPDistributedMessagingCenter */
 
 //End class hooking
