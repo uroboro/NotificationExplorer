@@ -1,4 +1,5 @@
 #import <notify.h>
+#import "interfaces.h"
 #import "UFSNotificationList.h"
 
 // convenient macros
@@ -21,258 +22,227 @@
 
 static UFSNotificationList *sharedNotificationList;
 
+// Start class hooking
+
 %group gNSNotificationCenter
 
 %hook NSNotificationCenter
 
-- (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)notificationName object:(id)anObject {
+- (void)addObserver:(id)observer selector:(SEL)selector name:(NSString *)notificationName object:(id)notificationSender {
 	%orig;
-	[sharedNotificationList addAPI:@"NSNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];
+}
+- (id<NSObject>)addObserverForName:(NSString *)notificationName object:(id)notificationSender queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSNotification *note))block {
+	id<NSObject> r = %orig;
+	[sharedNotificationList addAPI:@"NSNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];
+	return r;
 }
 - (void)postNotification:(NSNotification *)notification {
 	%orig;
 	NSString *notificationName = [notification name];
-	[sharedNotificationList addAPI:@"NSNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
-- (void)postNotificationName:(NSString *)notificationName object:(id)anObject {
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender {
 	%orig;
-	[sharedNotificationList addAPI:@"NSNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
-- (void)postNotificationName:(NSString *)notificationName object:(id)anObject userInfo:(NSDictionary *)userInfo {
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo {
 	%orig;
-	[sharedNotificationList addAPI:@"NSNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
+
 %end
 
 %end /* gNSNotificationCenter */
 
 %group gNSDistributedNotificationCenter
 
-@interface NSDistributedNotificationCenter : NSNotificationCenter {
-}
-- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)notificationName object:(id)arg4;
-- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)notificationName object:(id)arg4 suspensionBehavior:(unsigned int)arg5;
-- (id)addObserverForName:(id)notificationName object:(id)arg2 queue:(id)arg3 usingBlock:(id)arg4;
-- (id)addObserverForName:(id)notificationName object:(id)arg2 suspensionBehavior:(unsigned int)arg3 queue:(id)arg4 usingBlock:(id)arg5;
-- (void)postNotification:(id)notificationName;
-- (void)postNotificationName:(id)notificationName object:(id)arg2;
-- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3;
-- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 options:(unsigned int)arg4;
-- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 deliverImmediately:(BOOL)arg4;
-@end
-
 %hook NSDistributedNotificationCenter
-- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)notificationName object:(id)arg4 {
+
+- (void)addObserver:(id)observer selector:(SEL)selector name:(NSString *)notificationName object:(id)notificationSender {
 	%orig;
-	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];
 }
-- (void)addObserver:(id)arg1 selector:(SEL)arg2 name:(id)notificationName object:(id)arg4 suspensionBehavior:(unsigned int)arg5 {
+- (void)addObserver:(id)observer selector:(SEL)selector name:(NSString *)notificationName object:(id)notificationSender suspensionBehavior:(CFNotificationSuspensionBehavior)suspensionBehavior {
 	%orig;
-	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];
 }
-- (id)addObserverForName:(id)notificationName object:(id)arg2 queue:(id)arg3 usingBlock:(id)arg4 {
+- (id)addObserverForName:(NSString *)notificationName object:(id)notificationSender queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSNotification *note))block {
+	id r = %orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];
+	return r;
+}
+- (id)addObserverForName:(NSString *)notificationName object:(id)notificationSender suspensionBehavior:(CFNotificationSuspensionBehavior)suspensionBehavior queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSNotification *note))block {
+	id r = %orig;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];
+	return r;
+}
+- (void)postNotification:(NSString *)notificationName {
 	%orig;
-	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
-- (id)addObserverForName:(id)notificationName object:(id)arg2 suspensionBehavior:(unsigned int)arg3 queue:(id)arg4 usingBlock:(id)arg5 {
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender {
 	%orig;
-	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
-- (void)postNotification:(id)notificationName {
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo {
 	%orig;
-	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
-- (void)postNotificationName:(id)notificationName object:(id)arg2 {
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo options:(NSUInteger)notificationOptions {
 	%orig;
-	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
-- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 {
+- (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo deliverImmediately:(BOOL)deliverImmediately {
 	%orig;
-	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
-- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 options:(unsigned int)arg4 {
-	%orig;
-	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
-}
-- (void)postNotificationName:(id)notificationName object:(id)arg2 userInfo:(id)arg3 deliverImmediately:(BOOL)arg4 {
-	%orig;
-	[sharedNotificationList addAPI:@"NSDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
-}
-%end
 
 %end
+
+%end /* gNSDistributedNotificationCenter */
 
 %group gCPDistributedNotificationCenter
 
-@interface CPDistributedNotificationCenter : NSObject
-- (id)_initWithServerName:(NSString *)serverName;
-- (void)deliverNotification:(NSString *)notificationName userInfo:(NSDictionary *)userInfo;
-- (void)postNotificationName:(NSString *)notificationName;
-- (void)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo;
-- (BOOL)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo toBundleIdentifier:(NSString *)bundleIdentifier;
-@end
-
 %hook CPDistributedNotificationCenter
+
 - (id)_initWithServerName:(NSString *)serverName {
 	id r = %orig;
-	[sharedNotificationList addAPI:@"CPDistributedNotificationCenter" action:@"init" type:@"server" toNotification:serverName];;
+	[sharedNotificationList addAPI:@"CPDistributedNotificationCenter" action:@"init" type:@"server" toNotification:serverName];
 	return r;
 }
 - (void)deliverNotification:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
 	%orig;
-	[sharedNotificationList addAPI:@"CPDistributedNotificationCenter" action:@"deliver" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"CPDistributedNotificationCenter" action:@"deliver" type:@"notification" toNotification:notificationName];
 }
 - (void)postNotificationName:(NSString *)notificationName {
 	%orig;
-	[sharedNotificationList addAPI:@"CPDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"CPDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
 - (void)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
 	%orig;
-	[sharedNotificationList addAPI:@"CPDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"CPDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
 - (BOOL)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo toBundleIdentifier:(NSString *)bundleIdentifier {
 	BOOL r = %orig;
-	[sharedNotificationList addAPI:@"CPDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
+	[sharedNotificationList addAPI:@"CPDistributedNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 	return r;
 }
+
 %end
 
 %end /* gCPDistributedNotificationCenter */
 
 %group gCPDistributedMessagingCenter
 
-typedef struct XXStruct_kUSYWB {
-	unsigned _field1[8];
-} XXStruct_kUSYWB;
-
-@interface CPDistributedMessagingCenter : NSObject {
-}
-- (id)_initWithServerName:(id)serverName;
-- (void)_dispatchMessageNamed:(id)named userInfo:(id)info reply:(id *)reply auditToken:(void *)token; //token being a XXStruct_kUSYWB
-- (BOOL)_sendMessage:(id)message userInfo:(id)info receiveReply:(id *)reply error:(id *)error toTarget:(id)target selector:(SEL)selector context:(void *)context;
-- (BOOL)_sendMessage:(id)message userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(id *)error;
-- (void)registerForMessageName:(id)messageName target:(id)target selector:(SEL)selector;
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info;
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info error:(id *)error;
-- (void)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info toTarget:(id)target selector:(SEL)selector context:(void *)context;
-- (BOOL)sendMessageName:(id)name userInfo:(id)info;
-@end
-
 %hook CPDistributedMessagingCenter
-- (id)_initWithServerName:(id)serverName {
+
+- (id)_initWithServerName:(NSString *)serverName {
 	id r = %orig;
-	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"init" type:@"server" toNotification:serverName];;
+	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"init" type:@"server" toNotification:serverName];
 	return r;
 }
-- (void)_dispatchMessageNamed:(id)named userInfo:(id)info reply:(id *)reply auditToken:(void *)token {
+- (void)_dispatchMessageNamed:(NSString *)messageNamed userInfo:(NSDictionary *)userInfo reply:(id *)reply auditToken:(void *)token {
 	%orig;
-	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"dispatch" type:@"message" toNotification:named];;
+	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"dispatch" type:@"message" toNotification:messageNamed];
 }
-- (BOOL)_sendMessage:(id)message userInfo:(id)info receiveReply:(id *)reply error:(id *)error toTarget:(id)target selector:(SEL)selector context:(void *)context {
+- (BOOL)_sendMessage:(NSString *)messageNamed userInfo:(NSDictionary *)userInfo receiveReply:(id *)reply error:(NSError **)error toTarget:(id)target selector:(SEL)selector context:(void *)context {
 	BOOL r = %orig;
-	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:message];;
+	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:messageNamed];
 	return r;
 }
-- (BOOL)_sendMessage:(id)message userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(id *)error {
+- (BOOL)_sendMessage:(NSString *)messageNamed userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(NSError **)error {
 	BOOL r = %orig;
-	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:message];;
+	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:messageNamed];
 	return r;
 }
-- (void)registerForMessageName:(id)messageName target:(id)target selector:(SEL)selector {
+- (void)registerForMessageName:(NSString *)messageNamed target:(id)target selector:(SEL)selector {
 	%orig;
-	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"register" type:@"message" toNotification:messageName];;
+	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"register" type:@"message" toNotification:messageNamed];
 }
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info {
+- (id)sendMessageAndReceiveReplyName:(NSString *)messageNamed userInfo:(NSDictionary *)userInfo {
 	id r = %orig;
-	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:name];;
+	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:messageNamed];
 	return r;
 }
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info error:(id *)error {
+- (id)sendMessageAndReceiveReplyName:(NSString *)messageNamed userInfo:(NSDictionary *)userInfo error:(NSError **)error {
 	id r = %orig;
-	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:name];;
+	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:messageNamed];
 	return r;
 }
-- (void)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info toTarget:(id)target selector:(SEL)selector context:(void *)context {
+- (void)sendMessageAndReceiveReplyName:(NSString *)messageNamed userInfo:(NSDictionary *)userInfo toTarget:(id)target selector:(SEL)selector context:(void *)context {
 	%orig;
-	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:name];;
+	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:messageNamed];
 }
-- (BOOL)sendMessageName:(id)name userInfo:(id)info {
+- (BOOL)sendMessageName:(NSString *)messageNamed userInfo:(NSDictionary *)userInfo {
 	BOOL r = %orig;
-	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:name];;
+	[sharedNotificationList addAPI:@"CPDistributedMessagingCenter" action:@"send" type:@"message" toNotification:messageNamed];
 	return r;
 }
+
 %end
 
 %end /* gCPDistributedMessagingCenter */
 
-//End class hooking
+// End class hooking
 
-//Start function hooking
+// Start function hooking
 
 // CFNotificationCenter
 MSHook(void, CFNotificationCenterAddObserver, CFNotificationCenterRef center, const void *observer, CFNotificationCallback callBack, CFStringRef name, const void *object, CFNotificationSuspensionBehavior suspensionBehavior) {
 	_CFNotificationCenterAddObserver(center, observer, callBack, name, object, suspensionBehavior);
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSString *notificationName = (name != NULL)? (NSString *)name:@"all";
-	[sharedNotificationList addAPI:@"CFNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];;
-	[pool release];
+	NSString *notificationName = (NSString *)name;
+	[sharedNotificationList addAPI:@"CFNotificationCenter" action:@"observe" type:@"notification" toNotification:notificationName];
 }
 MSHook(void, CFNotificationCenterPostNotification, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, Boolean deliverImmediately) {
 	_CFNotificationCenterPostNotification(center, name, object, userInfo, deliverImmediately);
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSString *notificationName = (NSString *)name;
-	[sharedNotificationList addAPI:@"CFNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
-	[pool release];
+	[sharedNotificationList addAPI:@"CFNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
 MSHook(void, CFNotificationCenterPostNotificationWithOptions, CFNotificationCenterRef center, CFStringRef name, const void *object, CFDictionaryRef userInfo, CFOptionFlags options) {
 	_CFNotificationCenterPostNotificationWithOptions(center, name, object, userInfo, options);
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSString *notificationName = (NSString *)name;
-	[sharedNotificationList addAPI:@"CFNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];;
-	[pool release];
+	[sharedNotificationList addAPI:@"CFNotificationCenter" action:@"post" type:@"notification" toNotification:notificationName];
 }
 
 // notify_*
 MSHook(uint32_t, notify_post, const char *name) {
 	uint32_t r = _notify_post(name);
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSString *notificationName = [NSString stringWithUTF8String:name];
-	[sharedNotificationList addAPI:@"CNotifications" action:@"post" type:@"notification" toNotification:notificationName];;
-	[pool release];
+	NSString *notificationName = [[NSString alloc] initWithUTF8String:name];
+	[sharedNotificationList addAPI:@"CNotifications" action:@"post" type:@"notification" toNotification:notificationName];
+	[notificationName release];
 	return r;
 }
 MSHook(uint32_t, notify_register_check, const char *name, int *out_token) {
 	uint32_t r = _notify_register_check(name, out_token);
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSString *notificationName = [NSString stringWithUTF8String:name];
-	[sharedNotificationList addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];;
-	[pool release];
+	NSString *notificationName = [[NSString alloc] initWithUTF8String:name];
+	[sharedNotificationList addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];
+	[notificationName release];
 	return r;
 }
 MSHook(uint32_t, notify_register_signal, const char *name, int sig, int *out_token) {
 	uint32_t r = _notify_register_signal(name, sig, out_token);
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSString *notificationName = [NSString stringWithUTF8String:name];
-	[sharedNotificationList addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];;
-	[pool release];
+	NSString *notificationName = [[NSString alloc] initWithUTF8String:name];
+	[sharedNotificationList addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];
+	[notificationName release];
 	return r;
 }
 MSHook(uint32_t, notify_register_mach_port, const char *name, mach_port_t *notify_port, int flags, int *out_token) {
 	uint32_t r = _notify_register_mach_port(name, notify_port, flags, out_token);
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSString *notificationName = [NSString stringWithUTF8String:name];
-	[sharedNotificationList addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];;
-	[pool release];
+	NSString *notificationName = [[NSString alloc] initWithUTF8String:name];
+	[sharedNotificationList addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];
+	[notificationName release];
 	return r;
 }
 MSHook(uint32_t, notify_register_file_descriptor, const char *name, int *notify_fd, int flags, int *out_token) {
 	uint32_t r = _notify_register_file_descriptor(name, notify_fd, flags, out_token);
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSString *notificationName = [NSString stringWithUTF8String:name];
-	[sharedNotificationList addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];;
-	[pool release];
+	NSString *notificationName = [[NSString alloc] initWithUTF8String:name];
+	[sharedNotificationList addAPI:@"CNotifications" action:@"register" type:@"notification" toNotification:notificationName];
+	[notificationName release];
 	return r;
 }
+
+// End function hooking
 
 %ctor {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
@@ -283,15 +253,19 @@ MSHook(uint32_t, notify_register_file_descriptor, const char *name, int *notify_
 	}
 
 	if (%c(NSNotificationCenter)){
-		CMCLog(@"Initing group: %s", STRINGIFY(PASTE(g,NSNotificationCenter)));
+		CMCLog(@"Initing group: %s", "gNSNotificationCenter");
 		%init(gNSNotificationCenter);
 	}
+	if (%c(NSDistributedNotificationCenter)){
+		CMCLog(@"Initing group: %s", "gNSDistributedNotificationCenter");
+		%init(gNSDistributedNotificationCenter);
+	}
 	if (%c(CPDistributedNotificationCenter)){
-		CMCLog(@"Initing group: %s", STRINGIFY(PASTE(g,CPDistributedNotificationCenter)));
+		CMCLog(@"Initing group: %s", "gCPDistributedNotificationCenter");
 		%init(gCPDistributedNotificationCenter);
 	}
 	if (%c(CPDistributedMessagingCenter)){
-		CMCLog(@"Initing group: %s", STRINGIFY(PASTE(g,CPDistributedMessagingCenter)));
+		CMCLog(@"Initing group: %s", "gCPDistributedMessagingCenter");
 		%init(gCPDistributedMessagingCenter);
 	}
 	[pool release];

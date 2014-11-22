@@ -1,5 +1,5 @@
-#import "UFSNotificationList.h"
 #include <dispatch/dispatch.h>
+#import "UFSNotificationList.h"
 
 @implementation UFSNotificationList
 
@@ -7,10 +7,10 @@
 @synthesize enabled = _enabled;
 
 + (instancetype)sharedInstance {
-	static UFSNotificationList *_sharedInstance = nil;
+	static id _sharedInstance = nil;
 	static dispatch_once_t token = 0;
 	dispatch_once(&token, ^{
-		_sharedInstance = [UFSNotificationList new];
+		_sharedInstance = [self new];
 	});
 	return _sharedInstance;
 }
@@ -32,7 +32,7 @@
 	}
 
 	if (!notificationName) {
-		return NO;
+		notificationName = @"all";
 	}
 	NSMutableDictionary *d;
 	if (!(d = [_notifications objectForKey:notificationName])) {
@@ -52,6 +52,9 @@
 	if (![self prepareNotificationKey:notificationName]) {
 		return NO;
 	}
+	if (!notificationName) {
+		notificationName = @"all";
+	}
 	[[[_notifications objectForKey:notificationName] objectForKey:@"APIs"] addObject:api];
 
 	return YES;
@@ -60,6 +63,9 @@
 	if (![self prepareNotificationKey:notificationName]) {
 		return NO;
 	}
+	if (!notificationName) {
+		notificationName = @"all";
+	}
 	[[[_notifications objectForKey:notificationName] objectForKey:@"actions"] addObject:action];
 
 	return YES;
@@ -67,6 +73,9 @@
 - (BOOL)setType:(NSString *)type toNotification:(NSString *)notificationName {
 	if (![self prepareNotificationKey:notificationName]) {
 		return NO;
+	}
+	if (!notificationName) {
+		notificationName = @"all";
 	}
 	[[_notifications objectForKey:notificationName] setObject:type forKey:@"type"];
 

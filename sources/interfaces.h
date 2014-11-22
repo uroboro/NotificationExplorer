@@ -1,3 +1,4 @@
+/*
 @interface NSNotificationCenter : NSObject {
 }
 - (void)addObserver:(id)observer selector:(SEL)selector name:(NSString *)notificationName object:(id)notificationSender;
@@ -6,13 +7,14 @@
 - (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender;
 - (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo;
 @end
+*/
 
 @interface NSDistributedNotificationCenter : NSNotificationCenter {
 }
 - (void)addObserver:(id)observer selector:(SEL)selector name:(NSString *)notificationName object:(id)notificationSender;
-- (void)addObserver:(id)observer selector:(SEL)selector name:(NSString *)notificationName object:(id)notificationSender suspensionBehavior:(NSNotificationSuspensionBehavior)suspensionBehavior;
+- (void)addObserver:(id)observer selector:(SEL)selector name:(NSString *)notificationName object:(id)notificationSender suspensionBehavior:(CFNotificationSuspensionBehavior)suspensionBehavior;
 - (id)addObserverForName:(NSString *)notificationName object:(id)notificationSender queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSNotification *note))block;
-- (id)addObserverForName:(NSString *)notificationName object:(id)notificationSender suspensionBehavior:(NSNotificationSuspensionBehavior)suspensionBehavior queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSNotification *note))block;
+- (id)addObserverForName:(NSString *)notificationName object:(id)notificationSender suspensionBehavior:(CFNotificationSuspensionBehavior)suspensionBehavior queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSNotification *note))block;
 - (void)postNotification:(NSString *)notificationName;
 - (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender;
 - (void)postNotificationName:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo;
@@ -40,8 +42,8 @@ typedef struct XXStruct_kUSYWB {
 - (void)registerForMessageName:(id)messageName target:(id)target selector:(SEL)selector;
 - (BOOL)_sendMessage:(id)message userInfo:(NSDictionary *)userInfo receiveReply:(id *)reply error:(NSError **)error toTarget:(id)target selector:(SEL)selector context:(void *)context;
 - (BOOL)_sendMessage:(id)message userInfoData:(id)data oolKey:(id)key oolData:(id)data4 receiveReply:(id *)reply error:(NSError **)error;
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:NSDictionary *userInfo;
-- (id)sendMessageAndReceiveReplyName:(id)name userInfo:NSDictionary *userInfo error:(NSError **)error;
+- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(NSDictionary *)userInfo;
+- (id)sendMessageAndReceiveReplyName:(id)name userInfo:(NSDictionary *)userInfo error:(NSError **)error;
 - (void)sendMessageAndReceiveReplyName:(id)name userInfo:(NSDictionary *)userInfo toTarget:(id)target selector:(SEL)selector context:(void *)context;
 - (BOOL)sendMessageName:(id)name userInfo:(NSDictionary *)userInfo;
 @end
