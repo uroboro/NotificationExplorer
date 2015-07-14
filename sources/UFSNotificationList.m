@@ -18,6 +18,7 @@
 - (id)init {
 	if ((self = [super init])) {
 		_notifications = [NSMutableDictionary new];
+		_enabled = YES;
 	}
 	return self;
 }
