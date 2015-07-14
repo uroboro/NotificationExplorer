@@ -18,6 +18,18 @@
 #define MSHookFunctionAuto(name) MSHookFunction(name, MSHake(name))
 #endif
 
+#ifndef CMCLog
+#ifdef DEBUG
+#define CMCLog(format, ...) 	NSLog(@"\033[1;36m(%s) in [%s:%d]\033[0m \033[5;32;40m:::\033[0m \033[0;31m%@\033[0m", __PRETTY_FUNCTION__, __FILE__, __LINE__, [NSString stringWithFormat:format, ## __VA_ARGS__])
+#else
+#define CMCLog(format, ...)
+#endif
+
+#define CMCLogObject(object)	CMCLog(@"unknown instance (%p) of class %@: %@", object, NSStringFromClass([object class]), [object description])
+
+#define DebugLog(s, ...) CMCLog(@"\033[32m[Velox]\033[0m %@", [NSString stringWithFormat:(s), ##__VA_ARGS__]);
+#endif
+
 // macros end
 
 static UFSNotificationList *sharedNotificationList;
