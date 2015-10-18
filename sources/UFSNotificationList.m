@@ -3,9 +3,6 @@
 
 @implementation UFSNotificationList
 
-@synthesize notifications = _notifications;
-@synthesize enabled = _enabled;
-
 + (instancetype)sharedInstance {
 	static id _sharedInstance = nil;
 	static dispatch_once_t token = 0;
@@ -22,12 +19,13 @@
 	}
 	return self;
 }
+
 - (void)dealloc {
 	[_notifications release];
 	[super dealloc];
 }
 
-- (BOOL)prepareNotificationKey:(NSString *)notificationName {
+- (BOOL)addAPI:(NSString *)api action:(NSString *)action type:(NSString *)type toNotification:(NSString *)notificationName {
 	if (!self.isEnabled) {
 		return NO;
 	}
@@ -35,66 +33,29 @@
 	if (!notificationName) {
 		notificationName = @"all";
 	}
-	NSMutableDictionary *d;
-	if (!(d = [_notifications objectForKey:notificationName])) {
-		d = [NSMutableDictionary dictionaryWithCapacity:1];
+
+	NSMutableDictionary *d = [_notifications objectForKey:notificationName];
+	if (!d) {
+		d = [NSMutableDictionary new];
 		[_notifications setObject:d forKey:notificationName];
+		[d release];
 	}
+
+	[d setObject:type forKey:@"type"];
+
 	if (![d objectForKey:@"APIs"]) {
-		[d setObject:[NSMutableArray arrayWithCapacity:1] forKey:@"APIs"];
+		NSMutableArray *a = [NSMutableArray new];
+		[d setObject:a forKey:@"APIs"];
+		[a release];
 	}
+	[[d objectForKey:@"APIs"] addObject:api];
+
 	if (![d objectForKey:@"actions"]) {
-		[d setObject:[NSMutableArray arrayWithCapacity:1] forKey:@"actions"];
+		NSMutableArray *a = [NSMutableArray new];
+		[d setObject:a forKey:@"actions"];
+		[a release];
 	}
-
-	return YES;
-}
-- (BOOL)addAPI:(NSString *)api toNotification:(NSString *)notificationName {
-	if (![self prepareNotificationKey:notificationName]) {
-		return NO;
-	}
-	if (!notificationName) {
-		notificationName = @"all";
-	}
-	[[[_notifications objectForKey:notificationName] objectForKey:@"APIs"] addObject:api];
-
-	return YES;
-}
-- (BOOL)addAction:(NSString *)action toNotification:(NSString *)notificationName {
-	if (![self prepareNotificationKey:notificationName]) {
-		return NO;
-	}
-	if (!notificationName) {
-		notificationName = @"all";
-	}
-	[[[_notifications objectForKey:notificationName] objectForKey:@"actions"] addObject:action];
-
-	return YES;
-}
-- (BOOL)setType:(NSString *)type toNotification:(NSString *)notificationName {
-	if (![self prepareNotificationKey:notificationName]) {
-		return NO;
-	}
-	if (!notificationName) {
-		notificationName = @"all";
-	}
-	[[_notifications objectForKey:notificationName] setObject:type forKey:@"type"];
-
-	return YES;
-}
-- (BOOL)addAPI:(NSString *)api action:(NSString *)action type:(NSString *)type toNotification:(NSString *)notificationName {
-	if (![self prepareNotificationKey:notificationName]) {
-		return NO;
-	}
-	if (![self addAPI:api toNotification:notificationName]) {
-		return NO;
-	}
-	if (![self addAction:action toNotification:notificationName]) {
-		return NO;
-	}
-	if (![self setType:type toNotification:notificationName]) {
-		return NO;
-	}
+	[[d objectForKey:@"actions"] addObject:action];
 
 	return YES;
 }
