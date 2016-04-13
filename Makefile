@@ -1,7 +1,7 @@
-export TARGET = iphone:clang:7.1:6.1
+export TARGET = iphone:clang:latest:6.1
 export ARCHS = armv7 arm64
 
-include ./theos/makefiles/common.mk
+include $(THEOS)/makefiles/common.mk
 
 SOURCE_DIR = sources
 
