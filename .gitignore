@@ -219,7 +219,4 @@ pip-log.txt
 ## Theos
 #############
 .theos
-theos
 packages
-obj
-_

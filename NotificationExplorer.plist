@@ -1,2 +1,5 @@
 {
+	Bundles = (
+		"com.apple.Security"
+	)
 }
