@@ -38,7 +38,7 @@
 	if (!d) {
 		d = [NSMutableDictionary new];
 		[_notifications setObject:d forKey:notificationName];
-		[d release];
+		[d autorelease];
 	}
 
 	[d setObject:type forKey:@"type"];
@@ -46,14 +46,14 @@
 	if (![d objectForKey:@"APIs"]) {
 		NSMutableArray *a = [NSMutableArray new];
 		[d setObject:a forKey:@"APIs"];
-		[a release];
+		[a autorelease];
 	}
 	[[d objectForKey:@"APIs"] addObject:api];
 
 	if (![d objectForKey:@"actions"]) {
 		NSMutableArray *a = [NSMutableArray new];
 		[d setObject:a forKey:@"actions"];
-		[a release];
+		[a autorelease];
 	}
 	[[d objectForKey:@"actions"] addObject:action];
 
